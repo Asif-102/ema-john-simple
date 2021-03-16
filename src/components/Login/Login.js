@@ -4,6 +4,8 @@ import firebaseConfig from './firebase.config';
 import { useContext, useState } from 'react';
 import { UserContext } from "../../App";
 
+import {FcGoogle} from 'react-icons/fc';
+import { useHistory, useLocation } from "react-router";
 
 if (!firebase.apps.length) {
     firebase.initializeApp(firebaseConfig);
@@ -23,6 +25,9 @@ function Login() {
     });
 
     const [loggedInUser, setLoggedInUser] = useContext(UserContext);
+    const history = useHistory();
+    const location = useLocation();
+    let { from } = location.state || { from: { pathname: "/" } };
 
     const googleProvider = new firebase.auth.GoogleAuthProvider();
     // Sign in section
@@ -111,6 +116,7 @@ function Login() {
                     newUserInfo.success = true;
                     setUser(newUserInfo);
                     setLoggedInUser(newUserInfo);
+                    history.replace(from);
                     console.log('sign in user info', res.user);
                 })
                 .catch((error) => {
@@ -140,8 +146,8 @@ function Login() {
     return (
         <div style={{ textAlign: 'center' }}>
             {
-                !user.isSignedIn ? <button onClick={handleSignIn}>Sign in</button>
-                    : <button onClick={handleSignOut}>Sign Out</button>
+                !user.isSignedIn ? <button onClick={handleSignIn}><FcGoogle/>Sign in</button>
+                    : <button onClick={handleSignOut}><FcGoogle/>Sign Out</button>
             }
             {
                 user.isSignedIn && <div>
