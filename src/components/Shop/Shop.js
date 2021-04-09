@@ -10,12 +10,13 @@ const Shop = () => {
     // const first10 = fakeData.slice(0,10);
     const [products, setProducts] = useState([]);
     const [cart, setCart] = useState([]);
+    const [search, setSearch] = useState('');
 
     useEffect(()=>{
-        fetch('https://glacial-sea-84065.herokuapp.com/products')
+        fetch('https://glacial-sea-84065.herokuapp.com/products?search='+search)
         .then(res => res.json())
         .then(data => setProducts(data))
-    },[])
+    },[search])
     
     useEffect(()=>{
         const savedCart = getDatabaseCart();
@@ -30,6 +31,10 @@ const Shop = () => {
         .then(res => res.json())
         .then(data => setCart(data))
     }, [])
+
+    const handleSearch = event =>{
+        setSearch(event.target.value);
+    }
 
     const handleAddProduct = (product) =>{
         const toBeAddedKey = product.key;
@@ -53,6 +58,7 @@ const Shop = () => {
     return (
         <div className="twin-container">
             <div className="product-container">
+                <input type="text" onBlur={handleSearch} className="product-search" placeholder="search product"/>
                 {
                     products.length === 0 && <p>loading...</p>
                 }
